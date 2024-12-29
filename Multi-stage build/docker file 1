@@ -1,5 +1,3 @@
-# Docker File:
-
 FROM node AS build
 WORKDIR /usr/src/app
 COPY package.json .
@@ -27,7 +25,4 @@ networks:
 volumes:
    myvol:
 
-#-To compose:
-docker-compose up
-#if we create compose file with another name
-docker-compose -f file.yml up
+
