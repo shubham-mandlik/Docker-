@@ -1,0 +1,43 @@
+#-To download docker compose :
+curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+#-Give execute permission to docker-compose file:
+chmod +x /usr/local/bin/docker-compose
+
+# Docker-Compose File:
+
+version: '3.9'
+services:
+        db:
+           image: mysql
+           ports:
+                - 3306
+           volumes:
+                - myvol:/var/lib/sql
+           networks:
+                - mynet
+           environments:
+                - MYSQL_ROOT_PASSWORD=Pass@123
+                - MYSQL_DATABASE=wordpressdb
+
+        website:
+           image: wordpress
+           ports:
+                - 80:80
+           networks:
+                - mynet
+           environments:
+                - WORDPRESS_DB_HOST=db
+                - WORDPRESS_DB_USER=root
+                - WORDPRESS_DB_PASSWORD=Pass@123
+                - WORDPRESS_DB_NAME=wordpressdb
+
+networks:
+   mynet:
+      driver: bridge
+volumes:
+   myvol:
+
+#-To compose:
+docker-compose up
+#if we create compose file with another name
+docker-compose -f file.yml up
