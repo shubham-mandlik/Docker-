@@ -1,0 +1,49 @@
+- Create a Directory:
+mkdir threetier
+- Create 3 directories inside threetier and one docker compose file:
+mkdir app web db
+nano docker-compose.yml
+
+# docker-compose.yml:
+
+version: '3.9'
+services:
+       web:
+          build: 
+            context: ./web
+          ports:
+            - 80:80
+          volumes:
+            - ./web/myhtmlcode:/usr/share/nginx/html/
+          networks:
+             - webnet
+       app:
+        build:
+         context: ./app
+        ports:
+         - 9000
+        volumes:
+          - ./app/myphpcode:/usr/share/nginx/html
+        networks:
+          - webnet
+          - appnet
+       db:
+        build: 
+          context: ./db
+        ports:
+         - 3306
+        volumes:
+          - databackup:/var/lib/sql
+        networks:
+           - appnet
+networks:
+  webnet:
+    driver: bridge
+  appnet:
+    driver: bridge
+volumes:
+   databackup:
+   
+- Inside web directory:
+create one directory named myhtmlcode and inside this directory one index.html file 
+Also one dockerfile and default.conf file
