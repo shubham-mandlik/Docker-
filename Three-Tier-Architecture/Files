@@ -1,0 +1,127 @@
+- Inside web directory:
+create one directory named myhtmlcode and inside this directory one index.html file 
+Also one dockerfile and default.conf file
+
+# index.html:
+Hello.This is nginx .
+
+# Dockerfile:
+
+FROM nginx
+COPY default.conf /etc/nginx/conf.d/
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+
+# default.conf:
+
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  localhost;
+    #access_log  /var/log/nginx/host.access.log  main;
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+   }
+    #error_page  404              /404.html;
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        root           /usr/share/nginx/html;
+        fastcgi_pass   app:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  /usr/share/nginx/html$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+
+- Inside app directory:
+create one directory named myphpcode and inside this directory one index.php file 
+Also create one dockerfile file inside app directory
+ 
+ # index.php:
+ <?php
+echo "Hello. This is php.";
+?>
+
+# Dockerfile:
+
+FROM php:8.2-fpm
+RUN docker-php-ext-install mysqli pdo pdo_mysql  
+RUN apt-get update && apt-get install -y \
+		libfreetype-dev \
+		libjpeg62-turbo-dev \
+		libpng-dev \
+	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
+	&& docker-php-ext-install -j$(nproc) gd
+RUN set -eux; \
+    apt-get update; \
+    apt-get upgrade -y; \
+    apt-get install -y --no-install-recommends \
+            curl \
+            libmemcached-dev \
+            libz-dev \
+            libpq-dev \
+            libjpeg-dev \
+            libpng-dev \
+            libfreetype6-dev \
+            libssl-dev \
+            libwebp-dev \
+            libxpm-dev \
+            libonig-dev; \
+    rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+    # Install the PHP pdo_mysql extention
+    docker-php-ext-install pdo_mysql; \
+    # Install the PHP pdo_pgsql extention
+    docker-php-ext-install pdo_pgsql; \
+    # Install the PHP gd library
+    docker-php-ext-configure gd \
+            --prefix=/usr \
+            --with-jpeg \
+            --with-webp \
+            --with-xpm \
+            --with-freetype; \
+    docker-php-ext-install gd; \
+    php -r 'var_dump(gd_info());'
+WORKDIR /usr/share/nginx/html/
+CMD ["php-fpm"]
+
+- Inside db directory:
+create three files DockerFile , init.sql and init.sh 
+#nano Dockerfile
+
+FROM mysql
+ENV MYSQL_ROOT_PASSWORD=Pass@123
+COPY init.sql /docker-entrypoint-initdb.d/
+COPY init.sh /docker-entrypoint-initdb.d/
+EXPOSE 3306
+CMD ["mysqld"]
+
+#nano init.sql
+
+create database insta;
+use insta;
+create table users(id int , name varchar(20));
+insert into users values(1,'ravi'),(2,'aliya');
+
+#nano init.sh
+
+echo 'i am inside shell script file'
