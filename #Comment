@@ -1,0 +1,24 @@
+#-To download docker compose :
+curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+#-Give execute permission to docker-compose file:
+chmod +x /usr/local/bin/docker-compose
+# Docker-Compose File:
+
+#-To compose:
+docker-compose up
+#if we create compose file with another name
+docker-compose -f file.yml up
+
+
+# To build Dockerfile : docker build -t imgname .
+
+#To launch a container using image of this Dockerfile : docker run -d -p80:80 --name nginxcontainer imgname
+
+#three-tier-architecture 
+mkdir threetier
+- Create 3 directories inside threetier and one docker compose file:
+mkdir app web db
+nano docker-compose.yml
+
+# docker-compose.yml:
+
