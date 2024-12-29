@@ -1,24 +1,81 @@
-#-To download docker compose :
-curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-#-Give execute permission to docker-compose file:
-chmod +x /usr/local/bin/docker-compose
-# Docker-Compose File:
+*Docker compose command*
 
-#-To compose:
-docker-compose up
-#if we create compose file with another name
-docker-compose -f file.yml up
+curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose                        : To download docker compose
+chmod +x /usr/local/bin/docker-compose                                                                                                                   : To give execute permission to docker-compose file
+
+nano filename.yml
+docker-compose -f file.yml up 
 
 
-# To build Dockerfile : docker build -t imgname .
+*Multi-Stage Build Dockerfile command*
 
-#To launch a container using image of this Dockerfile : docker run -d -p80:80 --name nginxcontainer imgname
+nano Dockerfile 
+nano index.js                                              : NodeJs code
+nano nginxdockerfile                                       : Nginx Dockerfile
+nano package.json                                          : Dependencies
+nano nodedockerfile                                        : Nodejs Dockerfile
 
-#three-tier-architecture 
-mkdir threetier
-- Create 3 directories inside threetier and one docker compose file:
-mkdir app web db
-nano docker-compose.yml
+*MySQL Command*
 
-# docker-compose.yml:
+nano Dockerfile
 
+docker build .
+docker run -d {image name}
+docker exec -it {conatiner name} /bin/bash
+
+
+*Nginx Command*
+
+Nano Dockerfile
+
+docker build .
+docker images
+docker run -d -p80:80 {image id}
+
+
+*Nodejs command*
+
+nano Dockerfile
+nano package.json													
+nano index.js													  	
+nano default.conf													:reverse proxy IP
+nano ngixdocker
+
+docker bulid -t {name of new image} .									
+docker build -t {name of new image} -f nginxdocker .
+{Lastly run both container}
+
+
+*Python Reverse IP Command*
+
+nano Dockerfile
+nano requirements.txt
+nano app.py
+
+docker build -t {name of new image} .
+docker network create {name of network}
+docker run -d --network {name of created network} {builded image name/ID}
+cd /etc/nginx/conf.d/default.conf									                            	:nginx server block path
+
+nano default.conf 													                                  	:reverse proxy IP:we add the python container ip into nginx config 
+nano ngixdokcerfile 
+
+docker build -t {name of image} -f {docker file name}
+docker run -d -p80:80 --neteork {name of created network} {builded image name/ID}
+
+
+*Python command*
+
+# nano Dockerfile
+# nano requirements.txt	
+# nano app.py															
+
+# docker build -t {name of new image} .      						
+# docker run -d -p80:5000 {image name/ID}
+
+*Shell script file*
+
+nano Dockerfile
+nano my.sh
+
+docker build .
